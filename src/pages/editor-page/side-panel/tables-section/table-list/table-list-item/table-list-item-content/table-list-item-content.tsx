@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, FileType2, FileKey2 } from 'lucide-react';
+import { Plus, FileType2, FileKey2, MessageCircleMore } from 'lucide-react';
 import { Button } from '@/components/button/button';
 import {
     Accordion,
@@ -14,6 +14,8 @@ import { useChartDB } from '@/hooks/use-chartdb';
 import { TableField } from './table-field/table-field';
 import { TableIndex } from './table-index/table-index';
 import { DBIndex } from '@/lib/domain/db-index';
+import { useTranslation } from 'react-i18next';
+import { Textarea } from '@/components/textarea/textarea';
 
 type AccordionItemValue = 'fields' | 'indexes';
 
@@ -31,7 +33,9 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
         createIndex,
         removeIndex,
         updateIndex,
+        updateTable,
     } = useChartDB();
+    const { t } = useTranslation();
     const { color } = table;
     const [selectedItems, setSelectedItems] = React.useState<
         AccordionItemValue[]
@@ -51,7 +55,7 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
 
     return (
         <div
-            className="border-l-[6px] rounded-b-md px-1 flex flex-col gap-1"
+            className="flex flex-col gap-1 rounded-b-md border-l-[6px] px-1"
             style={{
                 borderColor: color,
             }}
@@ -64,28 +68,28 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                     setSelectedItems(value as AccordionItemValue[])
                 }
             >
-                <AccordionItem value="fields" className="border-y-0 mb-2">
+                <AccordionItem value="fields" className="mb-2 border-y-0">
                     <AccordionTrigger
                         iconPosition="right"
-                        className="p-0 px-2 text-xs text-slate-600 flex flex-1 hover:bg-secondary py-1 group"
+                        className="group flex flex-1 p-0 px-2 py-1 text-xs text-subtitle hover:bg-secondary"
                         asChild
                     >
-                        <div className="flex items-center justify-between flex-1">
+                        <div className="flex flex-1 items-center justify-between">
                             <div className="flex flex-row items-center gap-1">
-                                <FileType2 className="h-4 w-4" />
-                                Fields
+                                <FileType2 className="size-4" />
+                                {t('side_panel.tables_section.table.fields')}
                             </div>
                             <div className="flex flex-row-reverse">
-                                <div className="hidden group-hover:flex flex-row-reverse">
+                                <div className="hidden flex-row-reverse group-hover:flex">
                                     <Button
                                         variant="ghost"
-                                        className="hover:bg-primary-foreground p-0 h-4 w-4  text-slate-500 hover:text-slate-700 text-xs"
+                                        className="size-4 p-0 text-xs hover:bg-primary-foreground"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             createField(table.id);
                                         }}
                                     >
-                                        <Plus className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+                                        <Plus className="size-4 shrink-0 text-muted-foreground transition-transform duration-200" />
                                     </Button>
                                 </div>
                             </div>
@@ -107,28 +111,28 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                     </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value="indexes" className="border-y-0">
+                <AccordionItem value="indexes" className="mb-2 border-y-0">
                     <AccordionTrigger
                         iconPosition="right"
-                        className="p-0 px-2 text-xs text-slate-600 flex flex-1 hover:bg-secondary py-1 group"
+                        className="group flex flex-1 p-0 px-2 py-1 text-xs text-subtitle hover:bg-secondary"
                         asChild
                     >
-                        <div className="flex items-center justify-between flex-1">
+                        <div className="flex flex-1 items-center justify-between">
                             <div className="flex flex-row items-center gap-1">
-                                <FileKey2 className="h-4 w-4" />
-                                Indexes
+                                <FileKey2 className="size-4" />
+                                {t('side_panel.tables_section.table.indexes')}
                             </div>
                             <div className="flex flex-row-reverse">
-                                <div className="hidden group-hover:flex flex-row-reverse">
+                                <div className="hidden flex-row-reverse group-hover:flex">
                                     <Button
                                         variant="ghost"
-                                        className="hover:bg-primary-foreground p-0 h-4 w-4  text-slate-500 hover:text-slate-700 text-xs"
+                                        className="size-4 p-0 text-xs hover:bg-primary-foreground"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             createIndexHandler();
                                         }}
                                     >
-                                        <Plus className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+                                        <Plus className="size-4 shrink-0 text-muted-foreground transition-transform duration-200" />
                                     </Button>
                                 </div>
                             </div>
@@ -150,27 +154,56 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                         ))}
                     </AccordionContent>
                 </AccordionItem>
+
+                <AccordionItem value="comments" className="border-y-0">
+                    <AccordionTrigger
+                        iconPosition="right"
+                        className="group flex flex-1 p-0 px-2 py-1 text-xs text-subtitle hover:bg-secondary"
+                        asChild
+                    >
+                        <div className="flex flex-1 items-center justify-between">
+                            <div className="flex flex-row items-center gap-1">
+                                <MessageCircleMore className="size-4" />
+                                {t('side_panel.tables_section.table.comments')}
+                            </div>
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-0 pt-1">
+                        <Textarea
+                            value={table.comments}
+                            onChange={(e) =>
+                                updateTable(table.id, {
+                                    comments: e.target.value,
+                                })
+                            }
+                            placeholder={t(
+                                'side_panel.tables_section.table.no_comments'
+                            )}
+                            className="w-full rounded-md bg-muted text-sm focus-visible:ring-0"
+                        />
+                    </AccordionContent>
+                </AccordionItem>
             </Accordion>
             <Separator className="" />
-            <div className="flex items-center justify-between flex-1">
+            <div className="flex flex-1 items-center justify-between">
                 <div>
                     <Button
                         variant="outline"
-                        className="text-xs h-8 p-2"
+                        className="h-8 p-2 text-xs"
                         onClick={createIndexHandler}
                     >
                         <FileKey2 className="h-4" />
-                        Add Index
+                        {t('side_panel.tables_section.table.add_index')}
                     </Button>
                 </div>
                 <div>
                     <Button
                         variant="outline"
-                        className="text-xs h-8 p-2"
+                        className="h-8 p-2 text-xs"
                         onClick={() => createField(table.id)}
                     >
                         <FileType2 className="h-4" />
-                        Add Field
+                        {t('side_panel.tables_section.table.add_field')}
                     </Button>
                 </div>
             </div>

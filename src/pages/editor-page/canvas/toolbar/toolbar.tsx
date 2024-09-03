@@ -11,6 +11,8 @@ import {
     TooltipTrigger,
     TooltipContent,
 } from '@/components/tooltip/tooltip';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/button/button';
 
 const convertToPercentage = (value: number) => `${Math.round(value * 100)}%`;
 
@@ -18,6 +20,7 @@ export interface ToolbarProps {}
 
 export const Toolbar: React.FC<ToolbarProps> = () => {
     const { updateDiagramUpdatedAt } = useChartDB();
+    const { t } = useTranslation();
     const { redo, undo, hasRedo, hasUndo } = useHistory();
     const { getZoom, zoomIn, zoomOut, fitView } = useReactFlow();
     const [zoom, setZoom] = useState<string>(convertToPercentage(getZoom()));
@@ -50,8 +53,8 @@ export const Toolbar: React.FC<ToolbarProps> = () => {
 
     return (
         <div className="px-1">
-            <Card className="shadow-none p-0 bg-secondary h-[44px]">
-                <CardContent className="p-1 flex flex-row h-full items-center">
+            <Card className="h-[44px] bg-secondary p-0 shadow-none">
+                <CardContent className="flex h-full flex-row items-center p-1">
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <span>
@@ -60,7 +63,7 @@ export const Toolbar: React.FC<ToolbarProps> = () => {
                                 </ToolbarButton>
                             </span>
                         </TooltipTrigger>
-                        <TooltipContent>Save</TooltipContent>
+                        <TooltipContent>{t('toolbar.save')}</TooltipContent>
                     </Tooltip>
                     <Separator orientation="vertical" />
                     <Tooltip>
@@ -71,7 +74,7 @@ export const Toolbar: React.FC<ToolbarProps> = () => {
                                 </ToolbarButton>
                             </span>
                         </TooltipTrigger>
-                        <TooltipContent>Show All</TooltipContent>
+                        <TooltipContent>{t('toolbar.show_all')}</TooltipContent>
                     </Tooltip>
                     <Separator orientation="vertical" />
                     <Tooltip>
@@ -82,9 +85,15 @@ export const Toolbar: React.FC<ToolbarProps> = () => {
                                 </ToolbarButton>
                             </span>
                         </TooltipTrigger>
-                        <TooltipContent>Zoom Out</TooltipContent>
+                        <TooltipContent>{t('toolbar.zoom_out')}</TooltipContent>
                     </Tooltip>
-                    <ToolbarButton onClick={resetZoom}>{zoom}</ToolbarButton>
+                    <Button
+                        variant="ghost"
+                        onClick={resetZoom}
+                        className="w-[60px] p-2 hover:bg-primary-foreground"
+                    >
+                        {zoom}
+                    </Button>
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <span>
@@ -93,7 +102,7 @@ export const Toolbar: React.FC<ToolbarProps> = () => {
                                 </ToolbarButton>
                             </span>
                         </TooltipTrigger>
-                        <TooltipContent>Zoom In</TooltipContent>
+                        <TooltipContent>{t('toolbar.zoom_in')}</TooltipContent>
                     </Tooltip>
                     <Separator orientation="vertical" />
                     <Tooltip>
@@ -107,7 +116,7 @@ export const Toolbar: React.FC<ToolbarProps> = () => {
                                 </ToolbarButton>
                             </span>
                         </TooltipTrigger>
-                        <TooltipContent>Undo</TooltipContent>
+                        <TooltipContent>{t('toolbar.undo')}</TooltipContent>
                     </Tooltip>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -120,7 +129,7 @@ export const Toolbar: React.FC<ToolbarProps> = () => {
                                 </ToolbarButton>
                             </span>
                         </TooltipTrigger>
-                        <TooltipContent>Redo</TooltipContent>
+                        <TooltipContent>{t('toolbar.redo')}</TooltipContent>
                     </Tooltip>
                 </CardContent>
             </Card>

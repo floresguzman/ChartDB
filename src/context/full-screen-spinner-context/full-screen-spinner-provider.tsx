@@ -3,7 +3,11 @@ import {
     FullScreenLoaderContext,
     fullScreenLoaderContext,
 } from './full-screen-spinner-context';
-import { Dialog, DialogContent } from '@/components/dialog/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+} from '@/components/dialog/dialog';
 import { Spinner } from '@/components/spinner/spinner';
 import { Hourglass } from 'lucide-react';
 import { DialogTitle } from '@radix-ui/react-dialog';
@@ -36,13 +40,14 @@ export const FullScreenLoaderProvider: React.FC<React.PropsWithChildren> = ({
         >
             {children}
             <Dialog open={open}>
-                <DialogContent className="shadow-none bg-transparent border-none outline-none justify-center">
+                <DialogContent className="justify-center border-none bg-transparent shadow-none outline-none">
                     <DialogTitle className="hidden"></DialogTitle>
-                    <div className="bg-white w-fit p-3 rounded-xl">
+                    <DialogDescription className="hidden" />
+                    <div className="w-fit rounded-xl bg-primary-foreground p-3">
                         {animated ? (
-                            <Spinner size={'large'} />
+                            <Spinner size={'large'} className="text-primary" />
                         ) : (
-                            <Hourglass className="size-12" />
+                            <Hourglass className="size-12 text-primary" />
                         )}
                     </div>
                 </DialogContent>
